@@ -57,7 +57,7 @@ public class CrimeLab {
         });
 
     }
-    private CrimeCursorWrapper queryCrimes(String whereClause, String [] whereArgs){
+    private CrimeCursorWrapper queryCrimes(String whereClause, String[] whereArgs){
         Cursor cursor=mDatabase.query(CrimeTable.NAME,
                 null,
                 whereClause,
@@ -112,7 +112,10 @@ public class CrimeLab {
             if(cursor.getCount()==0){
                 return null;
             }
+            int count=cursor.getCount();
+
             cursor.moveToFirst();
+
             return cursor.getCrime();
 
         }finally {

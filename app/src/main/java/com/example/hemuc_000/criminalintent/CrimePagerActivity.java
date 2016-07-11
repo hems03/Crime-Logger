@@ -43,7 +43,14 @@ public class CrimePagerActivity extends AppCompatActivity {
                 return mCrimes.size();
             }
         });
-        mViewPager.setCurrentItem(mCrimes.indexOf(CrimeLab.get(this).getCrime(crimeID)));
+
+        for(int j=0;j<mCrimes.size();j++){
+            if(mCrimes.get(j).getID().equals(crimeID)){
+                mViewPager.setCurrentItem(j);
+            }
+        }
+
+        //mViewPager.setCurrentItem(mCrimes.indexOf(CrimeLab.get(this).getCrime(crimeID)));
 
     }
     public static Intent newIntent(Context c,UUID ID){
