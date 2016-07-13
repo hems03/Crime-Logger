@@ -4,11 +4,13 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Environment;
 
 import com.example.hemuc_000.criminalintent.database.CrimeBaseHelper;
 import com.example.hemuc_000.criminalintent.database.CrimeCursorWrapper;
 import com.example.hemuc_000.criminalintent.database.CrimeDbSchema.CrimeTable;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -53,7 +55,7 @@ public class CrimeLab {
         String uuidString=crime.getID().toString();
         ContentValues vals=getContentValues(crime);
 
-        mDatabase.update(CrimeTable.NAME,vals, CrimeTable.Cols.UUID +" = ?",new String[]{uuidString
+        mDatabase.update(CrimeTable.NAME, vals, CrimeTable.Cols.UUID + " = ?", new String[]{uuidString
         });
 
     }
@@ -65,7 +67,7 @@ public class CrimeLab {
                 null,
                 null,
                 null
-                );
+        );
         return(new CrimeCursorWrapper(cursor));
     }
 
@@ -74,6 +76,14 @@ public class CrimeLab {
         mContext=x.getApplicationContext();
         mDatabase=new CrimeBaseHelper(mContext).getWritableDatabase();
 
+    }
+
+    public File getPhotoFile(Crime m){
+        File externalFilesDir=mContext.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        if(externalFilesDir==null){
+            return null;
+        }
+        return new File(externalFilesDir, m.getPhotoFileName());
     }
     public void addCrime(Crime m){
         ContentValues values = getContentValues(m);
@@ -92,6 +102,7 @@ public class CrimeLab {
         values.put(CrimeTable.Cols.HOURS,crime.getHours());
         values.put(CrimeTable.Cols.MINUTES,crime.getMinutes());
         values.put(CrimeTable.Cols.isSolved,crime.isSolved() ?1:0);
+        values.put(CrimeTable.Cols.SUSPECT,crime.getSuspect());
         return(values);
 
     }

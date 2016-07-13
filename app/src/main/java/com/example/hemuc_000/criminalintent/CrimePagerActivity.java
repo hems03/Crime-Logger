@@ -17,10 +17,20 @@ import java.util.UUID;
 /**
  * Created by hemuc_000 on 7/4/2016.
  */
-public class CrimePagerActivity extends AppCompatActivity {
+public class CrimePagerActivity extends AppCompatActivity implements CrimeFragment.Callbacks{
     private ViewPager mViewPager;
     private List<Crime>mCrimes;
     private static final String EXTRA_CRIME_ID="com.example.hemuc_000.criminalintent.crime_ID";
+
+    @Override
+    public void onCrimeUpdated(Crime crime) {
+
+    }
+
+    @Override
+    public void onCrimeDeleted(Crime crime) {
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -26,7 +26,8 @@ public class CrimeBaseHelper extends SQLiteOpenHelper {
                 CrimeTable.Cols.DATE+", "+
                         CrimeTable.Cols.HOURS+", "+
                         CrimeTable.Cols.MINUTES+", "+
-                CrimeTable.Cols.isSolved+
+                CrimeTable.Cols.isSolved+", "+
+                        CrimeTable.Cols.SUSPECT+
                 ")"
         );
 

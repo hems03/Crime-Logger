@@ -4,7 +4,9 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
 
+
     >
+    <include layout="@layout/view_camera_and_title"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -49,11 +51,20 @@
         android:layout_marginRight="16dp"
         android:text="@string/crime_solved_label"
         />
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/button_delete_crime"
-        android:background="@drawable/ic_menu_delete"
-        android:layout_gravity="center_horizontal"/>
+
+
+    <Button android:id="@+id/crime_suspect"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/crime_suspect_text"
+            />
+    <Button android:id="@+id/crime_report"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_marginLeft="16dp"
+            android:text="@string/crime_report_text"/>
 
 </LinearLayout>

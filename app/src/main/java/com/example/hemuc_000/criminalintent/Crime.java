@@ -16,6 +16,7 @@ public class Crime {
     private Date mDate;
     private DateFormat mDateFormat;
     private String mDateText;
+    private String mSuspect;
 
     private int mHours,mMinutes;
 
@@ -32,6 +33,15 @@ public class Crime {
 
 
     }
+
+    public String getSuspect() {
+        return mSuspect;
+    }
+
+    public void setSuspect(String suspect) {
+        mSuspect = suspect;
+    }
+
     public String getTimeText(){
         String minuteText;
         if(mMinutes<10){
@@ -44,6 +54,9 @@ public class Crime {
        }else{
            return("@"+(mHours)+":"+minuteText+" A.M");
        }
+    }
+    public String getPhotoFileName(){
+        return "IMG_"+getID().toString()+".jpg";
     }
     public void makeDateText(){
 

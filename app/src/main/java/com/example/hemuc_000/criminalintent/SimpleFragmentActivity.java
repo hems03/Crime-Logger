@@ -8,24 +8,27 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public abstract class SimpleFragmentActivity extends AppCompatActivity{
+public abstract class SimpleFragmentActivity extends AppCompatActivity {
     protected abstract Fragment createFragment();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_fragment);
+        setContentView(getLayoutResId());
 
 
-        FragmentManager fm=getSupportFragmentManager();
-        Fragment frag=fm.findFragmentById(R.id.fragment_container);
-        if(frag==null){
-            frag= createFragment();
-            fm.beginTransaction().add(R.id.fragment_container,frag).commit();
+        FragmentManager fm = getSupportFragmentManager();
+        Fragment frag = fm.findFragmentById(R.id.fragment_container);
+        if (frag == null) {
+            frag = createFragment();
+            fm.beginTransaction().add(R.id.fragment_container, frag).commit();
+
+
+        }
+
 
     }
-
+    protected int getLayoutResId(){
+        return(R.layout.activity_fragment);
     }
-
-
-
 }
