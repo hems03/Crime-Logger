@@ -7,16 +7,25 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.test.SingleLaunchActivityTestCase;
+import android.transition.Slide;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 
-import org.apache.http.entity.InputStreamEntity;
+//import org.apache.http.entity.InputStreamEntity;
 
 import java.util.UUID;
 
 public class CriminalActivity extends SimpleFragmentActivity {
 
     private static  final String EXTRA_CRIME_ID="com.example.hemuc_000.criminalintent.CRIMEID";
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+    }
+
     @Override
     protected Fragment createFragment() {
         UUID crimeID= (UUID)getIntent().getSerializableExtra(EXTRA_CRIME_ID);

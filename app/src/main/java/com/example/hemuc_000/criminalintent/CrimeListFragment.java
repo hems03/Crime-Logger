@@ -3,8 +3,11 @@ package com.example.hemuc_000.criminalintent;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -38,6 +41,7 @@ public class CrimeListFragment extends Fragment
     private TextView mTitleTextView;
     private TextView mDateTextView;
     private CheckBox mSolvedCheckBox;
+    private FloatingActionButton mAddButton;
     private int mLastPickedCrime;
     private Callbacks mCallbacks;
     private boolean mSubtitleVisible;
@@ -48,6 +52,7 @@ public class CrimeListFragment extends Fragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
 
     }
 
@@ -62,7 +67,8 @@ public class CrimeListFragment extends Fragment
         mCallbacks=null;
     }
     public interface Callbacks{
-        void onCrimeSelected(Crime crime);
+        void onCrimeSelected(Crime crime,TextView sharedTitleView);
+
 
     }
     private void updateSubtitle(){
@@ -74,16 +80,17 @@ public class CrimeListFragment extends Fragment
         }
         AppCompatActivity activity=(AppCompatActivity)getActivity();
         activity.getSupportActionBar().setSubtitle(subtitle);
+
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch(item.getItemId()){
-            case R.id.menu_item_new_crime:
+           /* case R.id.menu_item_new_crime:
                 Crime crime = new Crime(UUID.randomUUID());
                 CrimeLab.get(getActivity()).addCrime(crime);
                 mCallbacks.onCrimeSelected(crime);
-                return(true);
+                return(true);*/
             case R.id.menu_item_show_subtitle:
                 mSubtitleVisible=!mSubtitleVisible;
                 getActivity().invalidateOptionsMenu();
@@ -115,12 +122,24 @@ public class CrimeListFragment extends Fragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_crime_list,container,false);
+        View view=inflater.inflate(R.layout.crime_list,container,false);
         mCrimeRecyclerView=(RecyclerView)view.findViewById(R.id.crime_recycler_view);
         mCrimeRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         if(savedInstanceState!=null){
             mSubtitleVisible=savedInstanceState.getBoolean(IS_SUBTITLE_VISIBLE);
         }
+
+        mAddButton=(FloatingActionButton)view.findViewById(R.id.button_add_crime);
+        mAddButton.setBackgroundTintList(ColorStateList.valueOf(Color
+                .parseColor("#000080")));
+        mAddButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Crime crime = new Crime(UUID.randomUUID());
+                CrimeLab.get(getActivity()).addCrime(crime);
+                mCallbacks.onCrimeSelected(crime,null);
+            }
+        });
 
         updateUI();
         return view;
@@ -132,7 +151,7 @@ public class CrimeListFragment extends Fragment
         updateUI();
     }
 
-    private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    private class CrimeHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
         public TextView mTitleText;
         private Crime mCrime;
         public CrimeHolder(View itemView){
@@ -151,12 +170,20 @@ public class CrimeListFragment extends Fragment
 
         }
 
+        @Override
+        public boolean onLongClick(View v) {
+            getActivity().finish();
+            return true;
+        }
 
         @Override
         public void onClick(View v) {
             mLastPickedCrime=CrimeLab.get(getActivity()).getCrimes().indexOf(CrimeLab.get(getActivity()).getCrime(mCrime.getID()));
-            mCallbacks.onCrimeSelected(mCrime);
+            TextView clickedTitleView=(TextView)v.findViewById(R.id.list_item_crime_title_textview);
+            mCallbacks.onCrimeSelected(mCrime,clickedTitleView);
+
         }
+
 
         public void bindCrime (Crime m){
             mCrime=m;

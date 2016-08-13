@@ -66,6 +66,7 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
         mCrime=
                 CrimeLab.get(getActivity()).
                 getCrime((UUID) getArguments().
@@ -128,6 +129,22 @@ public class CrimeFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mCallbacks=null;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.item_delete_crime:
+                android.support.v4.app.FragmentManager manager =getFragmentManager();
+                CrimeDeleteFragment crimeDeleteFragment= new CrimeDeleteFragment();
+                crimeDeleteFragment.setTargetFragment(CrimeFragment.this,REQUEST_DELETE);
+                crimeDeleteFragment.show(manager,TAG_CRIME_DELETE);
+
+
+
+        }
+        return super.onOptionsItemSelected(item);
+
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -215,8 +232,11 @@ public class CrimeFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
-        CrimeLab.get(getActivity()).updateCrime(mCrime);
-
+        if(mCrime.getTitle()!=null) {
+            CrimeLab.get(getActivity()).updateCrime(mCrime);
+        }else{
+            CrimeLab.get(getActivity()).deleteCrime(mCrime.getID().toString());
+        }
     }
 
 
@@ -336,29 +356,29 @@ public class CrimeFragment extends Fragment {
         });
 
 
-        mDeleteButton=(Button)v.findViewById(R.id.button_delete_crime);
+        /*mDeleteButton=(Button)v.findViewById(R.id.button_delete_crime);
         mDeleteButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                /*int popIndex=CrimeLab.get(getActivity()).getCrimes().indexOf(mCrime);
-                CrimeLab.get(getActivity()).getCrimes().remove(popIndex);*/
+                int popIndex=CrimeLab.get(getActivity()).getCrimes().indexOf(mCrime);
+                CrimeLab.get(getActivity()).getCrimes().remove(popIndex);
                 android.support.v4.app.FragmentManager manager =getFragmentManager();
                 CrimeDeleteFragment crimeDeleteFragment= new CrimeDeleteFragment();
                 crimeDeleteFragment.setTargetFragment(CrimeFragment.this,REQUEST_DELETE);
                 crimeDeleteFragment.show(manager,TAG_CRIME_DELETE);
 
-                /*String uuidString = mCrime.getID().toString();
+                String uuidString = mCrime.getID().toString();
                 CrimeLab.get(getActivity()).deleteCrime(uuidString);
                 if(getActivity().findViewById(R.id.fragment_container)==null) {
                     getActivity().finish();
                 }else{
                     updateCrime();
                     mCallbacks.onCrimeDeleted(mCrime);
-                }*/
+                }
 
 
             }
-        });
+        });*/
         updatePhotoView();
 
         return(v);

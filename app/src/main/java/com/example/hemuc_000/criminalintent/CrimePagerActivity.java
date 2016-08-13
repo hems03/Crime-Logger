@@ -1,5 +1,6 @@
 package com.example.hemuc_000.criminalintent;
 
+import android.app.ActivityOptions;
 import android.app.FragmentManager;
 import android.content.Context;
 import android.content.Intent;
@@ -63,7 +64,8 @@ public class CrimePagerActivity extends AppCompatActivity implements CrimeFragme
         //mViewPager.setCurrentItem(mCrimes.indexOf(CrimeLab.get(this).getCrime(crimeID)));
 
     }
-    public static Intent newIntent(Context c,UUID ID){
+    public static Intent newIntent(Context c,UUID ID,Bundle bundle){
+
         Intent intent=new Intent(c,CrimePagerActivity.class);
         intent.putExtra(EXTRA_CRIME_ID, ID);
         return(intent);

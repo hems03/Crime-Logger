@@ -6,7 +6,7 @@
     <string name="crime_title_hint">Enter a title for the crime</string>
     <string name="crime_title_label">Title</string>
     <string name="crime_details_label">Details</string>
-    <string name="crime_solved_label">Solved</string>
+    <string name="crime_solved_label">Finished</string>
     <string name="title_activity_simple_fragment">SimpleFragmentActivity</string>
     <string name="date_picker_title">Crime Date</string>
     <string name="new_crime">New Crime</string>
@@ -31,4 +31,5 @@
     <string name="crime_report_subject">Crime Logger Crime Report</string>
     <string name="send_report">Send crime report with</string>
     <string name="assure_delete_crime">Delete Crime?</string>
+    <string name="transition_crime_title">Crime Title</string>
 </resources>
