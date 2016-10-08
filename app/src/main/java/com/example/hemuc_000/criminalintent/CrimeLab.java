@@ -103,6 +103,7 @@ public class CrimeLab {
         values.put(CrimeTable.Cols.MINUTES,crime.getMinutes());
         values.put(CrimeTable.Cols.isSolved,crime.isSolved() ?1:0);
         values.put(CrimeTable.Cols.SUSPECT,crime.getSuspect());
+        values.put(CrimeTable.Cols.LOCATION,crime.getAddress());
         return(values);
 
     }

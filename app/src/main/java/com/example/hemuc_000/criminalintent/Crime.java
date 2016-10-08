@@ -1,5 +1,7 @@
 package com.example.hemuc_000.criminalintent;
 
+import android.location.Location;
+
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParsePosition;
@@ -17,6 +19,7 @@ public class Crime {
     private DateFormat mDateFormat;
     private String mDateText;
     private String mSuspect;
+    private String mAddress;
 
     private int mHours,mMinutes;
 
@@ -36,6 +39,14 @@ public class Crime {
 
     public String getSuspect() {
         return mSuspect;
+    }
+
+    public String getAddress() {
+        return mAddress;
+    }
+
+    public void setAddress(String address) {
+        mAddress = address;
     }
 
     public void setSuspect(String suspect) {

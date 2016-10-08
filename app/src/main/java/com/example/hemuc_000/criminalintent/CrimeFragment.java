@@ -1,21 +1,33 @@
 package com.example.hemuc_000.criminalintent;
 
+import android.*;
+import android.Manifest;
 import android.app.Activity;
 import android.app.FragmentManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ResultReceiver;
 import android.provider.ContactsContract;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.ShareCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,18 +40,26 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.FusedLocationProviderApi;
+import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.Locale;
 import java.util.UUID;
+import java.util.jar.*;
 
 import dalvik.system.PathClassLoader;
 
 /**
  * Created by hemuc_000 on 7/1/2016.
  */
-public class CrimeFragment extends Fragment {
+public class CrimeFragment extends Fragment implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private Crime mCrime;
     private EditText mTitleField;
     private CheckBox mSolvedBox;
@@ -49,9 +69,15 @@ public class CrimeFragment extends Fragment {
     private Button mReportButton;
     private Button mSuspectButton;
     private ImageButton mPhotoButton;
+    private Button mLatButton;
     private ImageView mPhotoView;
     private File mPhotoFile;
     private Callbacks mCallbacks;
+    private GoogleApiClient mGoogleApiClient;
+    private LocationManager locationManager;
+    private Geocoder mGeocoder;
+    protected ResultReceiver mLocationResultReceiver;
+
     private static final String ARGS_CRIME_ID="crime_id";
     private static final String TAG_DATE_PICKER="thisDick";
     private static final String TAG_TIME_PICKER="cock";
@@ -63,15 +89,34 @@ public class CrimeFragment extends Fragment {
     private static final int REQUEST_PHOTO=3;
     private static final int REQUEST_DELETE=4;
 
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mLocationResultReceiver= new ResultReceiver(new Handler()){
+            @Override
+            protected void onReceiveResult(int resultCode, Bundle resultData) {
+                Log.i("CrimeFragment", "Got result");
+                String address=(String)resultData.get(FetchAddressIntentService.RESULT_DATA_KEY);
+                mLatButton.setText(address);
+                mCrime.setAddress(address);
+            }
+        };
         mCrime=
                 CrimeLab.get(getActivity()).
                 getCrime((UUID) getArguments().
                         getSerializable(ARGS_CRIME_ID));
         mPhotoFile=CrimeLab.get(getActivity()).getPhotoFile(mCrime);
+        mGoogleApiClient= new GoogleApiClient.Builder(getActivity())
+                .addConnectionCallbacks(this)
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(this)
+                .build();
+
+        mGeocoder=new Geocoder(getActivity(), Locale.getDefault());
+
+        locationManager= (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
 
 
 
@@ -83,7 +128,33 @@ public class CrimeFragment extends Fragment {
         mCallbacks.onCrimeUpdated(mCrime);
     }
 
+    @Override
+    public void onConnected(@Nullable Bundle bundle) {
+        Log.i("CrimeFragment","Google API Client Connected");
 
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+
+    }
+
+    @Override
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
+
+    }
+
+    @Override
+    public void onStart() {
+        mGoogleApiClient.connect();
+        super.onStart();
+    }
+
+    @Override
+    public void onStop() {
+        mGoogleApiClient.disconnect();
+        super.onStop();
+    }
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -244,6 +315,33 @@ public class CrimeFragment extends Fragment {
 
         View v =inflater.inflate(R.layout.fragment_crime,container,false);
 
+        mLatButton =(Button)v.findViewById(R.id.crime_lat);
+        mLatButton.setText(mCrime.getAddress());
+        mLatButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if(mGoogleApiClient.isConnected()) {
+                        if (ContextCompat.checkSelfPermission(getActivity(),Manifest.permission.ACCESS_FINE_LOCATION)!=PackageManager.PERMISSION_GRANTED){
+                            ActivityCompat.requestPermissions(getActivity(),
+                                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                    4
+                                    );
+                        }
+
+                            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            Intent intent = new Intent(getActivity(),FetchAddressIntentService.class);
+                            intent.putExtra(FetchAddressIntentService.EXTRA_LOCATION_DATA,location);
+                            intent.putExtra(FetchAddressIntentService.EXTRA_RECEIVER,mLocationResultReceiver);
+                            getActivity().startService(intent);
+
+                    }
+                }catch (SecurityException e){
+                    Log.i("CrimeFragment","Didn't work");
+
+                }
+            }
+        });
         mTitleField=(EditText)v.findViewById(R.id.title_field);
         mTitleField.setText(mCrime.getTitle());
         mTitleField.addTextChangedListener(new TextWatcher() {
@@ -263,6 +361,7 @@ public class CrimeFragment extends Fragment {
 
             }
         });
+
         mReportButton=(Button)v.findViewById(R.id.crime_report);
         mReportButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -7,6 +7,8 @@
                      android:maxSdkVersion="18"/>
     <uses-feature android:name="android.hardware.Camera"
                   android:required="false"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
 
     <application
@@ -15,6 +17,9 @@
        android:label="Crime Logger"
 
         android:theme="@style/AppTheme" >
+        <service android:name=".FetchAddressIntentService"
+                 android:exported="true"/>
+
         <activity android:name=".CrimeListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

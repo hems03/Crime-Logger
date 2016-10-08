@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
@@ -26,6 +27,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.hemuc_000.criminalintent.database.CrimeDbSchema;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 
 import java.util.Date;
 import java.util.List;
@@ -44,6 +48,7 @@ public class CrimeListFragment extends Fragment
     private FloatingActionButton mAddButton;
     private int mLastPickedCrime;
     private Callbacks mCallbacks;
+
     private boolean mSubtitleVisible;
     private static final String IS_SUBTITLE_VISIBLE="subtitle";
     public static final String TO_DELETE="pleaseDelete";
@@ -54,7 +59,12 @@ public class CrimeListFragment extends Fragment
         setHasOptionsMenu(true);
 
 
+
     }
+
+
+
+
 
     @Override
     public void onAttach(Activity activity) {
@@ -71,6 +81,11 @@ public class CrimeListFragment extends Fragment
 
 
     }
+
+
+
+
+
     private void updateSubtitle(){
         CrimeLab crimeLab = CrimeLab.get(getActivity());
         int crimeCount=crimeLab.getCrimes().size();

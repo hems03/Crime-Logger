@@ -19,6 +19,7 @@
         <item quantity="other">%1$s crimes</item>
 
     </plurals>
+    <string name="address_button_text">Location</string>
     <string name="crime_suspect_text">Choose Suspect</string>
     <string name="crime_report_text">Send Crime</string>
     <string name="crime_report">%1$s
