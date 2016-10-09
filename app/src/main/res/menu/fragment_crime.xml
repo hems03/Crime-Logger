@@ -11,4 +11,11 @@
         app:showAsAction="always"
 
         />
+    <item
+        android:id="@+id/item_send_crime"
+        android:title="@string/send_report"
+        android:icon="@drawable/ic_send"
+        app:showAsAction="always"
+        />
+
 </menu>

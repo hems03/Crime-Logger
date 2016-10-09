@@ -210,6 +210,16 @@ public class CrimeFragment extends Fragment implements GoogleApiClient.Connectio
                 CrimeDeleteFragment crimeDeleteFragment= new CrimeDeleteFragment();
                 crimeDeleteFragment.setTargetFragment(CrimeFragment.this,REQUEST_DELETE);
                 crimeDeleteFragment.show(manager,TAG_CRIME_DELETE);
+                break;
+            case R.id.item_send_crime:
+                Intent i = new Intent(Intent.ACTION_SEND);
+                i.setType("text/plain");
+                i.putExtra(Intent.EXTRA_TEXT, getCrimeReport());
+                i.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject));
+                i = Intent.createChooser(i, getString(R.string.send_report));
+
+                startActivity(i);
+                break;
 
 
 
@@ -329,7 +339,7 @@ public class CrimeFragment extends Fragment implements GoogleApiClient.Connectio
                                     );
                         }
 
-                            Location location = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                            Location location = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
                             Intent intent = new Intent(getActivity(),FetchAddressIntentService.class);
                             intent.putExtra(FetchAddressIntentService.EXTRA_LOCATION_DATA,location);
                             intent.putExtra(FetchAddressIntentService.EXTRA_RECEIVER,mLocationResultReceiver);
@@ -362,7 +372,7 @@ public class CrimeFragment extends Fragment implements GoogleApiClient.Connectio
             }
         });
 
-        mReportButton=(Button)v.findViewById(R.id.crime_report);
+       /* mReportButton=(Button)v.findViewById(R.id.crime_report);
         mReportButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -375,6 +385,7 @@ public class CrimeFragment extends Fragment implements GoogleApiClient.Connectio
                 startActivity(i);
             }
         });
+        */
         mDateButton=(Button)v.findViewById(R.id.crime_date);
 
         mDateButton.setEnabled(true);
