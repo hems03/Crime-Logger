@@ -78,11 +78,13 @@ public class CrimeFragment extends Fragment implements GoogleApiClient.Connectio
     private Geocoder mGeocoder;
     protected ResultReceiver mLocationResultReceiver;
 
+
+
     private static final String ARGS_CRIME_ID="crime_id";
-    private static final String TAG_DATE_PICKER="thisDick";
-    private static final String TAG_TIME_PICKER="cock";
-    private static final String TAG_PHOTO_ZOOMER="jizz";
-    private static final String TAG_CRIME_DELETE="jizzledoos";
+    private static final String TAG_DATE_PICKER="date";
+    private static final String TAG_TIME_PICKER="time";
+    private static final String TAG_PHOTO_ZOOMER="photo";
+    private static final String TAG_CRIME_DELETE="delete";
     private static final int REQUEST_DATE=0;
     private static final int REQUEST_TIME=1;
     private static final int REQUEST_CONTACT=2;
